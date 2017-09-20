@@ -17,3 +17,6 @@ df[which(df[,"Pickup_longitude"]==0),] #cuáles tienen longitud 0?
 length(df[which(df[,"Pickup_longitude"]==0),df$Pickup_longitude]) #cuántas tienen longitud 0?
 sel<-rownames(df[which(df[,"Pickup_longitude"]==0),]) #seleccionamos aparte las que tienen longitud 0
 df[sel, "Pickup_longitude"]<- NA #de las seleccionadas, le ponemos NA a Pickup_longitude
+
+# variable cuantitativa: histograma y boxplot
+# variable cualitativa: barplot
