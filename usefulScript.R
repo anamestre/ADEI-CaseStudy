@@ -31,7 +31,6 @@ na_count <- data.frame(na_count)
 
 #boxplots to do:
 boxplot(df$Pickup_latitude)
-boxplot(df$Pickup_latitude)
 boxplot(df$Pickup_longitude)
 boxplot(df$Dropoff_latitude)
 boxplot(df$Dropoff_longitude)
@@ -43,21 +42,22 @@ boxplot(df$Tip_amount)
 boxplot(df$Tolls_amount)
 boxplot(df$improvement_surcharge)
 boxplot(df$Total_amount)
+boxplot(df$Passenger_count)
 
 #histograms to do:
-hist(df$Pickup_latitude)
-hist(df$Pickup_latitude)
-hist(df$Pickup_longitude)
-hist(df$Dropoff_latitude)
-hist(df$Dropoff_longitude)
-hist(df$Trip_distance)
-hist(df$Fare_amount)
-hist(df$Extra)
-hist(df$MTA_tax)
-hist(df$Tip_amount)
-hist(df$Tolls_amount)
-hist(df$improvement_surcharge)
-hist(df$Total_amount)
+hist(df$Pickup_latitude, main = NULL, xlab = NULL, ylab = NULL)
+hist(df$Pickup_longitude, main = NULL, xlab = NULL, ylab = NULL)
+hist(df$Dropoff_latitude, main = NULL, xlab = NULL, ylab = NULL)
+hist(df$Dropoff_longitude, main = NULL, xlab = NULL, ylab = NULL)
+hist(df$Trip_distance, main = NULL, xlab = NULL, ylab = NULL)
+hist(df$Fare_amount, main = NULL, xlab = NULL, ylab = NULL)
+hist(df$Extra, main = NULL, xlab = NULL, ylab = NULL)
+hist(df$MTA_tax, main = NULL, xlab = NULL, ylab = NULL)
+hist(df$Tip_amount, main = NULL, xlab = NULL, ylab = NULL)
+hist(df$Tolls_amount, main = NULL, xlab = NULL, ylab = NULL)
+hist(df$improvement_surcharge, main = NULL, xlab = NULL, ylab = NULL)
+hist(df$Total_amount, breaks = 40, main = NULL, xlab = NULL, ylab = NULL)
+hist(df$Passenger_count, main = NULL, xlab = NULL, ylab = NULL)
 
 #barplots for factors:
 pickupCounts <- table(df$pickup)
@@ -66,3 +66,19 @@ dropoffCounts <- table(df$dropoff)
 barplot(dropoffCounts)
 triptypeCounts <- table(df$Trip_type)
 barplot(triptypeCounts)
+paytypeCounts <- table(df$Payment_type)
+barplot(paytypeCounts)
+ratecodeCounts <- table(df$RateCodeID)
+barplot(ratecodeCounts)
+storefwdCounts <- table(df$Store_and_fwd_flag)
+barplot(storefwdCounts)
+vendorCounts <- table(df$VendorID)
+barplot(vendorCounts)
+
+
+df$pickup <- as.factor(df$pickup)
+df$dropoff <- as.factor(df$dropoff)
+#aquí va un summary de totes dades
+
+df$NAvalues <- 0
+
