@@ -82,3 +82,40 @@ df$dropoff <- as.factor(df$dropoff)
 
 df$NAvalues <- 0
 
+
+sel<-rownames(df[which(df[,"Pickup_longitude"]==0),]) #seleccionamos aparte las que tienen longitud 0
+> df[sel, "Pickup_longitude"]<- "missing"
+> sel<-rownames(df[which(df[,"Pickup_latitude"]==0),]) #seleccionamos aparte las que tienen longitud 0
+> df[sel, "Pickup_latitude"]<- "missing"
+> sel<-rownames(df[which(df[,"Dropoff_latitude"]==0),]) #seleccionamos aparte las que tienen longitud 0
+> df[sel, "Dropoff_latitude"]<- "missing"
+> sel<-rownames(df[which(df[,"Dropoff_longitude"]==0),]) #seleccionamos aparte las que tienen longitud 0
+> df[sel, "Dropoff_longitude"]<- "missing"
+> sel<-rownames(df[which(df[,"Passenger_count"]==0),]) #seleccionamos aparte las que tienen longitud 0
+> df[sel, "Passenger_count"]<- "missing"
+> sel<-rownames(df[which(df[,"Trip_distance"]==0),]) #seleccionamos aparte las que tienen longitud 0
+> df[sel, "Trip_distance"]<- "missing"
+> sel<-rownames(df[which(df[,"Fare_amount"]==0),]) #seleccionamos aparte las que tienen longitud 0
+> df[sel, "Fare_amount"]<- "missing"
+> sel<-rownames(df2[which(df2[,"Fare_amount"]<0),]) #seleccionamos aparte las que tienen longitud 0
+> sel<-rownames(df[which(df[,"Fare_amount"]<0),]) #seleccionamos aparte las que tienen longitud 0
+> df[sel, "Fare_amount"]<- "error"
+> sel<-rownames(df[which(df[,"Extra"]<0),]) #seleccionamos aparte las que tienen longitud 0
+> df[sel, "Extra"]<- "error"
+> sel<-rownames(df[which(df[,"Extra"]=4.5,]) #seleccionamos aparte las que tienen longitud 0
+                   Error: unexpected '=' in "sel<-rownames(df[which(df[,"Extra"]="
+                   > sel<-rownames(df[which(df[,"Extra"]==4.5,]) #seleccionamos aparte las que tienen longitud 0
+                                      Error: unexpected ']' in "sel<-rownames(df[which(df[,"Extra"]==4.5,]"
+                                      > sel<-rownames(df[which(df[,"Extra"]==4.5),]) #seleccionamos aparte las que tienen longitud 0
+                                      > df[sel, "Extra"]<- "outlier"
+                                      > sel<-rownames(df[which(df[,"MTA_tax"]<0),]) #seleccionamos aparte las que tienen longitud 0
+                                      > df[sel, "MTA_tax"]<- "error"
+                                      > sel<-rownames(df[which(df[,"improvement_surcharge"]<0),]) #seleccionamos aparte las que tienen longitud 0
+                                      > df[sel, "improvement_surcharge"]<- "error"
+                                      > sel<-rownames(df[which(df[,"Total_amount"]<0),]) #seleccionamos aparte las que tienen longitud 0
+                                      > df[sel, "Total_amount"]<- "error"
+                                      
+
+                                      sel<-rownames(df[which(df[,"Total_amount"]==0),]) #seleccionamos aparte las que tienen longitud 0
+                                      > df[sel, "Total_amount"]<- "missing"
+

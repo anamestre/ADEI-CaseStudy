@@ -1,0 +1,83 @@
+vendorID
+Creative VeriFone 
+    1080     3920 
+
+store fwd
+   N    Y 
+4982   18
+
+ratecode
+  Standard        JFK     Newark Negotiated 
+      4876         13          3        108 
+
+pickup long
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ -74.08  -73.96  -73.95  -73.80  -73.92    0.00 
+
+pickup lat
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   0.00   40.69   40.75   40.67   40.80   40.91 
+
+dropoff lat
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   0.00   40.69   40.75   40.62   40.79   40.93 
+
+dropoff long
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ -74.18  -73.97  -73.95  -73.71  -73.91    0.00 
+
+passcount
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  0.000   1.000   1.000   1.346   1.000   6.000 
+
+tripdis
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  0.000   1.000   1.770   2.737   3.400  39.300 
+
+fare amount
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ -52.00    6.00    9.00   11.78   14.00  127.50 
+
+extra
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-1.0000  0.0000  0.5000  0.3498  0.5000  4.5000 
+
+MTA tax
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-0.5000  0.5000  0.5000  0.4866  0.5000  0.5000 
+
+tip
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  0.000   0.000   0.000   1.221   2.000  30.000 
+
+tolls
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.0000  0.0000  0.1032  0.0000 10.5000 
+
+ehail
+   Mode    NA's 
+logical    5000 
+
+impro surcharge
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ -0.300   0.300   0.300   0.292   0.300   0.300 
+
+total amount
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ -52.80    7.80   11.05   14.23   17.16  155.16 
+
+payment type
+Credit card        Cash   No charge     Dispute 
+       2483        2481          16          20
+
+trip type 
+Street-hail    Dispatch 
+       4891         109 
+
+pickup
+ 00  01  02  03  04  05  06  07  08  09  10  11  12  13  14  15  16  17  18  19  20  21  22  23 
+193 153 138 111  98  62  74 148 208 227 172 197 193 167 213 268 260 325 349 309 298 312 270 255 
+
+dropoff
+ 00  01  02  03  04  05  06  07  08  09  10  11  12  13  14  15  16  17  18  19  20  21  22  23 
+222 161 124 124 106  61  68 131 196 230 177 188 203 171 193 254 257 307 366 321 299 308 279 254 
