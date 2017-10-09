@@ -141,3 +141,7 @@ for (i in 1:5000) {
   }
 }
 
+df2$Pickup_latitude <- as.numeric(df$Pickup_latitude)
+df2$Pickup_longitude <- as.numeric(df$Pickup_longitude)
+df2$Dropoff_latitude <- as.numeric(df$Dropoff_latitude)
+df2$Dropoff_longitude <- as.numeric(df$Dropoff_longitude)
