@@ -104,10 +104,7 @@ sel<-rownames(df[which(df[,"Pickup_longitude"]==0),]) #seleccionamos aparte las 
  df[sel, "Fare_amount"]<- "error"
  sel<-rownames(df[which(df[,"Extra"]<0),]) #seleccionamos aparte las que tienen longitud 0
  df[sel, "Extra"]<- "error"
-sel<-rownames(df[which(df[,"Extra"]=4.5,]) #seleccionamos aparte las que tienen longitud 0
-                   Error: unexpected '=' in "sel<-rownames(df[which(df[,"Extra"]="
-                   sel<-rownames(df[which(df[,"Extra"]==4.5,]) #seleccionamos aparte las que tienen longitud 0
-                                      Error: unexpected ']' in "sel<-rownames(df[which(df[,"Extra"]==4.5,]"
+
                                        sel<-rownames(df[which(df[,"Extra"]==4.5),]) #seleccionamos aparte las que tienen longitud 0
                                        df[sel, "Extra"]<- "outlier"
                                        sel<-rownames(df[which(df[,"MTA_tax"]<0),]) #seleccionamos aparte las que tienen longitud 0
@@ -141,7 +138,15 @@ for (i in 1:5000) {
   }
 }
 
-df2$Pickup_latitude <- as.numeric(df$Pickup_latitude)
-df2$Pickup_longitude <- as.numeric(df$Pickup_longitude)
-df2$Dropoff_latitude <- as.numeric(df$Dropoff_latitude)
-df2$Dropoff_longitude <- as.numeric(df$Dropoff_longitude)
+df$Pickup_latitude <- as.numeric(df$Pickup_latitude)
+df$Pickup_longitude <- as.numeric(df$Pickup_longitude)
+df$Dropoff_latitude <- as.numeric(df$Dropoff_latitude)
+df$Dropoff_longitude <- as.numeric(df$Dropoff_longitude)
+df$Trip_distance <- as.numeric(df$Trip_distance)
+df$Fare_amount <- as.numeric(df$Fare_amount)
+df$Extra <- as.numeric(df$Extra)
+df$MTA_tax <- as.numeric(df$MTA_tax)
+df$improvement_surcharge <- as.numeric(df$improvement_surcharge)
+df$Total_amount <- as.numeric(df$Total_amount)
+df$Passenger_count <- as.numeric(df$Passenger_count)
+
