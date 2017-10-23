@@ -1,4 +1,4 @@
-df<-read.table("green_tripdata_2016-01.csv", header=T,sep ="," )  #loading the data
+# df<-read.table("green_tripdata_2016-01.csv", header=T,sep ="," )  #loading the data
 set.seed(27041996)
 sam<-as.vector(sort(sample(1:nrow(df),5000)))
 df<-df[sam,] #selection of 5000 data rows
