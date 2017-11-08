@@ -1,0 +1,108 @@
+Call:
+MCA(X = df4[, c(16, 21, 23:25)], quanti.sup = 1, quali.sup = c(3)) 
+
+
+Eigenvalues
+                       Dim.1   Dim.2   Dim.3   Dim.4   Dim.5   Dim.6   Dim.7   Dim.8   Dim.9
+Variance               0.646   0.594   0.530   0.339   0.333   0.332   0.328   0.136   0.075
+% of var.             19.366  17.806  15.902  10.159   9.994   9.973   9.832   4.091   2.242
+Cumulative % of var.  19.366  37.172  53.074  63.232  73.226  83.199  93.030  97.122  99.364
+                      Dim.10
+Variance               0.021
+% of var.              0.636
+Cumulative % of var. 100.000
+
+Individuals (the 10 first)
+                            Dim.1    ctr   cos2    Dim.2    ctr   cos2    Dim.3    ctr   cos2
+179                      | -0.573  0.010  0.128 |  0.349  0.004  0.048 |  1.246  0.059  0.608
+1820                     |  1.186  0.044  0.533 | -0.747  0.019  0.211 |  0.214  0.002  0.017
+3028                     |  1.186  0.044  0.533 | -0.747  0.019  0.211 |  0.214  0.002  0.017
+3155                     | -0.573  0.010  0.128 |  0.349  0.004  0.048 |  1.246  0.059  0.608
+4201                     |  1.186  0.044  0.533 | -0.747  0.019  0.211 |  0.214  0.002  0.017
+4277                     |  0.755  0.018  0.220 |  0.233  0.002  0.021 | -0.261  0.003  0.026
+4468                     | -0.573  0.010  0.128 |  0.349  0.004  0.048 |  1.246  0.059  0.608
+4640                     | -0.573  0.010  0.128 |  0.349  0.004  0.048 |  1.246  0.059  0.608
+4965                     |  0.316  0.003  0.038 |  1.205  0.049  0.559 | -0.714  0.019  0.196
+5392                     | -0.912  0.026  0.340 | -0.729  0.018  0.217 | -0.730  0.020  0.218
+                          
+179                      |
+1820                     |
+3028                     |
+3155                     |
+4201                     |
+4277                     |
+4468                     |
+4640                     |
+4965                     |
+5392                     |
+
+Categories (the 10 first)
+                             Dim.1     ctr    cos2  v.test     Dim.2     ctr    cos2  v.test  
+High_amount              |   1.437  26.357   0.678  58.110 |  -0.855  10.145   0.240 -34.570 |
+Moderate_amount          |   0.379   1.830   0.047  15.308 |   1.391  26.775   0.633  56.138 |
+small_amount             |  -0.680   5.839   0.150 -27.304 |   0.383   2.010   0.047  15.362 |
+Very_small_amount        |  -1.078  15.715   0.412 -45.320 |  -0.859  10.862   0.262 -36.128 |
+Fare_amount_inclass.NA   |  -1.084   0.012   0.000  -1.084 |  -1.227   0.017   0.000  -1.227 |
+High_fare                |   1.461  26.200   0.666  57.585 |  -0.900  10.815   0.253 -35.475 |
+Moderate_fare            |   0.422   2.255   0.058  16.983 |   1.366  25.739   0.608  55.012 |
+small_fare               |  -0.662   5.785   0.151 -27.385 |   0.394   2.234   0.053  16.319 |
+Very_small_fare          |  -1.081  15.711   0.411 -45.265 |  -0.854  10.651   0.256 -35.737 |
+extra_0                  |   0.063   0.095   0.003   4.121 |  -0.098   0.251   0.008  -6.435 |
+                           Dim.3     ctr    cos2  v.test  
+High_amount                0.227   0.798   0.017   9.163 |
+Moderate_amount           -0.763   9.034   0.191 -30.816 |
+small_amount               1.392  29.774   0.627  55.870 |
+Very_small_amount         -0.794  10.392   0.224 -33.395 |
+Fare_amount_inclass.NA    -1.433   0.026   0.000  -1.433 |
+High_fare                  0.248   0.918   0.019   9.766 |
+Moderate_fare             -0.791   9.658   0.204 -31.846 |
+small_fare                 1.337  28.758   0.615  55.329 |
+Very_small_fare           -0.793  10.298   0.221 -33.208 |
+extra_0                   -0.051   0.077   0.002  -3.361 |
+
+Categorical variables (eta2)
+                           Dim.1 Dim.2 Dim.3  
+Tamount_inclass          | 0.963 0.887 0.795 |
+Fare_amount_inclass      | 0.968 0.881 0.790 |
+Extra_fac                | 0.006 0.013 0.005 |
+
+Supplementary categories
+                             Dim.1    cos2  v.test     Dim.2    cos2  v.test     Dim.3    cos2
+High_dist                |   1.311   0.551  52.381 |  -0.578   0.107 -23.092 |   0.080   0.002
+Moderate_dist            |   0.304   0.029  12.120 |   1.110   0.395  44.339 |  -0.362   0.042
+small_dist               |  -0.648   0.135 -25.934 |   0.281   0.025  11.255 |   0.872   0.245
+Trip_distance_inclass.NA |   0.528   0.008   6.152 |  -0.760   0.016  -8.851 |  -0.026   0.000
+Very_small_dist          |  -1.013   0.333 -40.714 |  -0.724   0.170 -29.098 |  -0.586   0.111
+                          v.test  
+High_dist                  3.213 |
+Moderate_dist            -14.453 |
+small_dist                34.922 |
+Trip_distance_inclass.NA  -0.303 |
+Very_small_dist          -23.539 |
+
+Supplementary categorical variables (eta2)
+                           Dim.1 Dim.2 Dim.3  
+Trip_distance_inclass    | 0.800 0.543 0.303 |
+
+Supplementary continuous variable
+                            Dim.1    Dim.2    Dim.3  
+Total_amount             |  0.786 | -0.194 |  0.098 |
+
+
+
+> round(res.mca$eig,3)
+       eigenvalue percentage of variance cumulative percentage of variance
+dim 1       0.646                 19.366                            19.366
+dim 2       0.594                 17.806                            37.172
+dim 3       0.530                 15.902                            53.074
+dim 4       0.339                 10.159                            63.232
+dim 5       0.333                  9.994                            73.226
+dim 6       0.332                  9.973                            83.199
+dim 7       0.328                  9.832                            93.030
+dim 8       0.136                  4.091                            97.122
+dim 9       0.075                  2.242                            99.364
+dim 10      0.021                  0.636                           100.000
+> barplot(res.mca$eig[,1],main="valores propios",names.arg=paste("dim",1:nrow(res.mca$eig)))
+> sum(res.mca$eig[,1])
+[1] 3.333333
+> 
