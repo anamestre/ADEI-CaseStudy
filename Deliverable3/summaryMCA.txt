@@ -105,4 +105,275 @@ dim 10      0.021                  0.636                           100.000
 > barplot(res.mca$eig[,1],main="valores propios",names.arg=paste("dim",1:nrow(res.mca$eig)))
 > sum(res.mca$eig[,1])
 [1] 3.333333
-> 
+>
+
+
+########################
+
+INTERPRETING THE AXIS
+
+#########################
+
+> round(cbind(res.pca$var$coord[,1:3],res.pca$var$cos2[,1:3],res.pca$var$contrib[,1:3]),2)
+                      Dim.1 Dim.2 Dim.3 Dim.1 Dim.2 Dim.3 Dim.1 Dim.2 Dim.3
+Trip_distance         -0.18  0.79  0.58  0.03  0.63  0.34  1.57 62.37 36.06
+Extra                  0.26 -0.58  0.77  0.07  0.33  0.60  3.48 33.14 63.38
+MTA_tax                0.98  0.14 -0.05  0.95  0.02  0.00 47.56  2.04  0.32
+improvement_surcharge  0.97  0.16 -0.05  0.95  0.02  0.00 47.39  2.45  0.25
+> round(cbind(res.pca$var$cos2[,1:4],res.pca$var$contrib[,1:4]),2)
+                      Dim.1 Dim.2 Dim.3 Dim.4 Dim.1 Dim.2 Dim.3 Dim.4
+Trip_distance          0.03  0.63  0.34  0.00  1.57 62.37 36.06  0.01
+Extra                  0.07  0.33  0.60  0.00  3.48 33.14 63.38  0.00
+MTA_tax                0.95  0.02  0.00  0.02 47.56  2.04  0.32 50.08
+improvement_surcharge  0.95  0.02  0.00  0.02 47.39  2.45  0.25 49.91
+> dimdesc(res.mca)
+$`Dim 1`
+$`Dim 1`$quanti
+             correlation p.value
+Total_amount   0.7859587       0
+
+$`Dim 1`$quali
+                               R2      p.value
+Tamount_inclass       0.963284541 0.000000e+00
+Trip_distance_inclass 0.800354913 0.000000e+00
+Fare_amount_inclass   0.967582002 0.000000e+00
+Extra_fac             0.005738715 2.649395e-06
+
+$`Dim 1`$category
+       	                  Estimate       p.value
+High_fare                 1.3251650  0.000000e+00
+High_dist                 0.9759390  0.000000e+00
+High_amount               1.1430223  0.000000e+00
+Moderate_fare             0.4904583  1.481043e-66
+Moderate_amount           0.2929385  4.026058e-54
+Moderate_dist             0.1663754  2.794719e-34
+extra_0.5                -0.6386989  3.469764e-02
+extra_1                  -0.6825336  3.608495e-03
+extra_0                  -0.5569697  3.721099e-05
+small_dist               -0.5979209 4.166511e-159
+small_amount             -0.5581814 1.372058e-177
+small_fare               -0.3798921 9.972336e-179
+Very_small_fare          -0.7168838  0.000000e+00
+Very_small_dist          -0.8913951  0.000000e+00
+Very_small_amount        -0.8777793  0.000000e+00
+
+
+$`Dim 2`
+$`Dim 2`$quanti
+             correlation      p.value
+Total_amount   -0.194325 1.367016e-43
+
+$`Dim 2`$quali
+                              R2      p.value
+Tamount_inclass       0.88659570 0.000000e+00
+Trip_distance_inclass 0.54297776 0.000000e+00
+Fare_amount_inclass   0.88060400 0.000000e+00
+Extra_fac             0.01336978 1.863054e-14
+
+$`Dim 2`$category
+                           Estimate       p.value
+Moderate_fare             1.2402259  0.000000e+00
+Moderate_dist             0.9588263  0.000000e+00
+Moderate_amount           1.0600611  0.000000e+00
+small_fare                0.4917490  1.849343e-61
+small_amount              0.2834071  1.683476e-54
+small_dist                0.3199038  9.720779e-30
+extra_1                   0.5707797  1.690044e-11
+extra_0                   0.3291543  1.140380e-10
+High_dist                -0.3419713 1.231730e-124
+Very_small_dist          -0.4544305 9.283299e-204
+High_amount              -0.6701038 4.916021e-299
+Very_small_fare          -0.4695414 9.881313e-323
+High_fare                -0.5051844 2.572050e-317
+Very_small_amount        -0.6733643  0.000000e+00
+
+
+$`Dim 3`
+$`Dim 3`$quanti
+             correlation      p.value
+Total_amount   0.0981714 3.803416e-12
+
+$`Dim 3`$quali
+                               R2    p.value
+Tamount_inclass       0.795058250 0.0000e+00
+Trip_distance_inclass 0.302578182 0.0000e+00
+Fare_amount_inclass   0.789648930 0.0000e+00
+Extra_fac             0.005469011 5.0881e-06
+
+$`Dim 3`$category
+                     Estimate       p.value
+small_fare         1.18176934  0.000000e+00
+small_amount       1.00214625  0.000000e+00
+small_dist         0.63807765 4.836198e-306
+High_fare          0.38888440  1.004391e-22
+High_amount        0.15397940  3.550192e-20
+High_dist          0.06162223  1.307690e-03
+extra_0           -0.20206094  7.729318e-04
+extra_1           -0.04930579  7.457875e-07
+Moderate_dist     -0.26045564  2.589212e-48
+Very_small_dist   -0.42334040 1.001289e-129
+Moderate_amount   -0.56683602 4.734917e-231
+Moderate_fare     -0.36707680 1.619183e-248
+Very_small_fare   -0.36887869 5.644917e-273
+Very_small_amount -0.58928963 1.907723e-276
+
+
+
+> names(res.mca)
+[1] "eig"        "call"       "ind"        "var"        "svd"        "quali.sup" 
+[7] "quanti.sup"
+> res.mca$var$coord
+                             Dim 1       Dim 2        Dim 3       Dim 4
+High_amount             1.43727346 -0.85503670  0.226640693 -0.07772318
+Moderate_amount         0.37923414  1.39075081 -0.763420570  0.02041561
+small_amount           -0.68009471  0.38263885  1.391622921  0.01483356
+Very_small_amount      -1.07787571 -0.85926891 -0.794261265  0.04026021
+Fare_amount_inclass.NA -1.08350695 -1.22695277 -1.432936559 50.16916567
+High_fare               1.46053095 -0.89976789  0.247690366 -0.02521148
+Moderate_fare           0.42163042  1.36580835 -0.790644672  0.02255783
+small_fare             -0.66163329  0.39427088  1.336741249  0.09960433
+Very_small_fare        -1.08106312 -0.85350261 -0.793119631 -0.13484955
+extra_0                 0.06305740 -0.09845298 -0.051423775  0.75492878
+extra_0.5              -0.03866517  0.02857297 -0.006225524 -0.71149512
+extra_1                -0.09322303  0.21518137  0.158389936 -0.49348720
+Extra_fac.NA            3.09394420 -2.24810809  0.803710936 -6.49423697
+                              Dim 5
+High_amount            -0.013596434
+Moderate_amount         0.017804733
+small_amount           -0.018733984
+Very_small_amount       0.013556315
+Fare_amount_inclass.NA  3.351514765
+High_fare              -0.020238034
+Moderate_fare          -0.006312793
+small_fare             -0.044469528
+Very_small_fare         0.065579077
+extra_0                -0.015588700
+extra_0.5              -0.555539568
+extra_1                 1.247479701
+Extra_fac.NA           55.794887080
+> res.mca$quali.sup$coord
+                              Dim 1      Dim 2       Dim 3       Dim 4       Dim 5
+High_dist                 1.3111360 -0.5780096  0.08042606 -0.02222802 -0.11049345
+Moderate_dist             0.3035292  1.1104508 -0.36195741  0.04205180 -0.01328368
+small_dist               -0.6477363  0.2811171  0.87220460  0.05558258 -0.02375575
+Trip_distance_inclass.NA  0.5283420 -0.7601955 -0.02605830  0.02037659  0.34139273
+Very_small_dist          -1.0130031 -0.7239838 -0.58568445 -0.07707892  0.10933209
+
+
+
+############################
+
+> res.mca$var
+$coord
+                             Dim 1       Dim 2        Dim 3       Dim 4
+High_amount             1.43727346 -0.85503670  0.226640693 -0.07772318
+Moderate_amount         0.37923414  1.39075081 -0.763420570  0.02041561
+small_amount           -0.68009471  0.38263885  1.391622921  0.01483356
+Very_small_amount      -1.07787571 -0.85926891 -0.794261265  0.04026021
+Fare_amount_inclass.NA -1.08350695 -1.22695277 -1.432936559 50.16916567
+High_fare               1.46053095 -0.89976789  0.247690366 -0.02521148
+Moderate_fare           0.42163042  1.36580835 -0.790644672  0.02255783
+small_fare             -0.66163329  0.39427088  1.336741249  0.09960433
+Very_small_fare        -1.08106312 -0.85350261 -0.793119631 -0.13484955
+extra_0                 0.06305740 -0.09845298 -0.051423775  0.75492878
+extra_0.5              -0.03866517  0.02857297 -0.006225524 -0.71149512
+extra_1                -0.09322303  0.21518137  0.158389936 -0.49348720
+Extra_fac.NA            3.09394420 -2.24810809  0.803710936 -6.49423697
+                              Dim 5
+High_amount            -0.013596434
+Moderate_amount         0.017804733
+small_amount           -0.018733984
+Very_small_amount       0.013556315
+Fare_amount_inclass.NA  3.351514765
+High_fare              -0.020238034
+Moderate_fare          -0.006312793
+small_fare             -0.044469528
+Very_small_fare         0.065579077
+extra_0                -0.015588700
+extra_0.5              -0.555539568
+extra_1                 1.247479701
+Extra_fac.NA           55.794887080
+
+$contrib
+                             Dim 1       Dim 2        Dim 3        Dim 4
+High_amount            26.35676071 10.14530054 7.981506e-01  0.146935180
+Moderate_amount         1.83049438 26.77530092 9.033938e+00  0.010113231
+small_amount            5.83903729  2.01030872 2.977429e+01  0.005295474
+Very_small_amount      15.71458988 10.86190653 1.039174e+01  0.041795477
+Fare_amount_inclass.NA  0.01216798  0.01697044 2.591821e-02 49.732510546
+High_fare              26.19962336 10.81475478 9.176723e-01  0.014882693
+Moderate_fare           2.25528001 25.73939246 9.658177e+00  0.012306726
+small_fare              5.78495581  2.23427659 2.875782e+01  0.249938539
+Very_small_fare        15.71076199 10.65091785 1.029837e+01  0.466021109
+extra_0                 0.09478839  0.25131763 7.677269e-02 25.900397445
+extra_0.5               0.02891389  0.01717354 9.128815e-04 18.664747452
+extra_1                 0.07341067  0.42540665 2.580856e-01  3.921714861
+Extra_fac.NA            0.09921564  0.05697335 8.153626e-03  0.833341268
+                              Dim 5
+High_amount             0.004570543
+Moderate_amount         0.007818600
+small_amount            0.008585534
+Very_small_amount       0.004816743
+Fare_amount_inclass.NA  0.225601504
+High_fare               0.009747982
+Moderate_fare           0.000979680
+small_fare              0.050640146
+Very_small_fare         0.112028957
+extra_0                 0.011225543
+extra_0.5              11.566483656
+extra_1                25.473246596
+Extra_fac.NA           62.524254517
+
+$cos2
+                              Dim 1        Dim 2        Dim 3        Dim 4
+High_amount            0.6779377214 0.2399277622 1.685725e-02 1.982495e-03
+Moderate_amount        0.0470455945 0.6327071508 1.906478e-01 1.363418e-04
+small_amount           0.1496705878 0.0473778984 6.266728e-01 7.120141e-05
+Very_small_amount      0.4123388461 0.2620445201 2.238946e-01 5.752664e-04
+Fare_amount_inclass.NA 0.0002356931 0.0003022311 4.122279e-04 5.053092e-01
+High_fare              0.6657317669 0.2526613022 1.914679e-02 1.983692e-04
+Moderate_fare          0.0579013279 0.6075809752 2.036045e-01 1.657369e-04
+small_fare             0.1505643973 0.0534659145 6.145855e-01 3.412275e-03
+Very_small_fare        0.4113434508 0.2563965597 2.214012e-01 6.400317e-03
+extra_0                0.0034098964 0.0083124077 2.267759e-03 4.887435e-01
+extra_0.5              0.0008952698 0.0004889055 2.320951e-05 3.031503e-01
+extra_1                0.0016997322 0.0090561462 4.906697e-03 4.763058e-02
+Extra_fac.NA           0.0019218010 0.0010146537 1.296830e-04 8.467198e-03
+                              Dim 5
+High_amount            6.066819e-05
+Moderate_amount        1.036991e-04
+small_amount           1.135685e-04
+Very_small_amount      6.522291e-05
+Fare_amount_inclass.NA 2.255100e-03
+High_fare              1.278246e-04
+Moderate_fare          1.297979e-05
+small_fare             6.801624e-04
+Very_small_fare        1.513677e-03
+extra_0                2.083958e-04
+extra_0.5              1.848180e-01
+extra_1                3.043695e-01
+Extra_fac.NA           6.249888e-01
+
+$v.test
+                            Dim 1      Dim 2       Dim 3       Dim 4       Dim 5
+High_amount             58.110307 -34.569932   9.1632947  -3.1424207  -0.5497165
+Moderate_amount         15.307975  56.138350 -30.8158519   0.8240865   0.7186969
+small_amount           -27.304014  15.361944  55.8700012   0.5955285  -0.7521202
+Very_small_amount      -45.319530 -36.128157 -33.3948960   1.6927499   0.5699783
+Fare_amount_inclass.NA  -1.083507  -1.226953  -1.4329366  50.1691657   3.3515148
+High_fare               57.584806 -35.475427   9.7657648  -0.9940207  -0.7979312
+Moderate_fare           16.982536  55.012370 -31.8457837   0.9085898  -0.2542683
+small_fare             -27.385421  16.319121  55.3285667   4.1226862  -1.8406219
+Very_small_fare        -45.264796 -35.736694 -33.2084199  -5.6462357   2.7458374
+extra_0                  4.121249  -6.434602  -3.3609090  49.3399591  -1.0188323
+extra_0.5               -2.111715   1.560525  -0.3400097 -38.8586128 -30.3410330
+extra_1                 -2.909702   6.716298   4.9437091 -15.4028546  38.9366705
+Extra_fac.NA             3.093944  -2.248108   0.8037109  -6.4942370  55.7948871
+
+$eta2
+                          Dim 1      Dim 2       Dim 3      Dim 4        Dim 5
+Tamount_inclass     0.963284541 0.88659570 0.795058250 0.00207375 0.0002577578
+Fare_amount_inclass 0.967582002 0.88060400 0.789648930 0.51275707 0.0039875631
+Extra_fac           0.005738715 0.01336978 0.005469011 0.50101934 0.9951482710
+
+
