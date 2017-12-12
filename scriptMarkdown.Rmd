@@ -59,22 +59,36 @@ lapply(requiredPackages, require, character.only = TRUE)
 #setwd("F:/DOCENCIA/FIB-ADEI/PRACTICA/NYCABS")
 #setwd("D:/Dropbox/DOCENCIA/FIB-ADEI/PRACTICA/NYCABS")
 #load("MyTaxi5000Clean.RData")
+dfD4 <- df
 summary(dfD4)
 names(dfD4)
 ```
 
 ## Multiple Linear Regression issues
 
-dfasfdsjfsadfsdafasd
+*Imputing values (is this right?)*
+
+https://www.kdnuggets.com/2017/09/missing-data-imputation-using-r.html
+
+```{r}
+install.packages("mice")
+library("mice")
+install.packages("VIM")
+library("VIM")
+str(dfD4)
+md.pattern(dfD4)
+df_miss = aggr(dfD4, col = mdc(1:2), numbers=TRUE, sortVars=TRUE, labels=names(dfD4), cex.axis=.7, gap=3, ylab=c("Proportion of missingness","Missingness Pattern"))
+marginplot(dfD4[, c("Trip_distance", "Fare_amount")], col = mdc(1:2), cex.numbers = 1.2, pch = 19)
+dfD4$Ehail_fee <- NULL
+mice_imputes = mice(dfD4, m=5, maxit = 50)
+```
 
 *Target numeric Total_amount*
 
 ```{r}
 names(dfD4)
 vars_con<-names(dfD4)[c(6:16,18,19)];vars_con
-vars_dis<-names(dfD4)[c(1,4,5,10,20,21)]
-#vars_res<-names(dfD4)[c(15,23)] ¿?
-
+vars_dis<-names(dfD4)[c(1,4,5,20,21,22,23)];vars_dis
 vars_cexp<-vars_con[c(1:12)];vars_cexp
 
 round(cor(dfD4[,c("Total_amount",vars_cexp)],use="pairwise.complete.obs"),dig=2)

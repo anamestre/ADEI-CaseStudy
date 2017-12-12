@@ -68,10 +68,10 @@ names(dfD4)
 *Target numeric Total_amount*
   
   ```{r}
+
 names(dfD4)
 vars_con<-names(dfD4)[c(6:16,18,19)];vars_con
-vars_dis<-names(dfD4)[c(1,4,5,10,20,21)]
-#vars_res<-names(dfD4)[c(15,23)] ¿?
+vars_dis<-names(dfD4)[c(1,4,5,20,21,22,23)];vars_dis
 
 vars_cexp<-vars_con[c(1:12)];vars_cexp
 
