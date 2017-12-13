@@ -1,0 +1,101 @@
+---
+title: "script_factors"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+m27 <- lm(log(Total_amount)~poly(Trip_distance, 3)+Extra+MTA_tax+poly(Tip_amount,2)+Tolls_amount, data=dfD4)
+#Els poly van bé per modelar però no per analitzar
+summary(m27)
+
+# Adapted from the best model of the other class
+m241<-lm(log(Total_amount)~Trip_distance+Extra+MTA_tax+Tip_amount+Tolls_amount,data=dfD4)
+
+anova(m241, m27)
+summary(m27)
+anova(m27)
+vif(m27)
+plot(alleffects(m27))
+
+#Després de fer a les variables la transformació polinòmica cal fer un test d'efectes nets
+#queda un model net perquè tots els termes són molt sifnificatius
+```
+
+Veure si val la pena amb ANOVA (test de fisher)
+Summary: els coeficients són significatius? els que no, fora
+Tots els efectes nets (blocs) siguin estadísticament significatius
+VIF: no variables redundants
+plot si anem molt perduts (bueno bueno)
+
+```{r}
+#model m28: com m27 pero amb extra i MTA amb factors
+
+BIC(m27, m28) #fisher test is not possible
+```
+
+quin és millor: m27 o m28?
+BIC/R2 (no sé quin) més alt millor = explica una major variabilitat
+però triem el BIC més baix (combina no recordo què amb explicabilitat)
+dif en BIC de poques unitats no és rellevant
+170 unitats és important ja (m27 = -4137, m28 = -4308, triem m28)
+no es pot fer fisher test perquè no son models encaixats
+
+
+#NEW factors in the predictor
+```{r}
+vars_dis #la tenim
+
+condes(df[,c("Total_amount", vars_dis)],1)
+```
+
+condes = per saber a nivell individual quines variables estan més relacionades amb el target
+tot el que incorporem com a factor no pot estar com a numèric i al revés: o una o l'altra
+
+```{r}
+m37 <- lm(log(Total_amount)~poly(Trip_distance, 3)+Extra+MTA_tax+poly(Tip_amount,2)+Tolls_amount+RateCodeID+Payment_type+f.hour+f.scharge+f.nbpass+VendorID, data=dfD4)
+
+anova(m27, m37)
+```
+adaptar al que tenim nosaltres (que no lo tenemos jajajajaj)
+
+m27: R2 = 0.9149
+m37: R2 = 0.9205
+el 37 és millor (modestament) en R2 i en test de fisher
+
+l'hora no és un bon factor (23 params) => podem convertirla en la variable period (peak morning 7-9, off-peak 10-16, peak afternoon 17-20, night 21-6)
+
+```{r}
+m38 <- lm(log(Total_amount)~poly(Trip_distance, 3)+Extra+MTA_tax+poly(Tip_amount,2)+Tolls_amount+RateCodeID+Payment_type+period+f.scharge+f.nbpass+VendorID, data=dfD4)
+
+BIC(m37, m38)
+Anova(m37)
+Anova(m38)
+
+m39 <- step(m37, k = log(nrow(df))) #♠fer servir m38 millor
+summary(m39)
+Anova(m39)
+vif(m39) #problems: remove one var
+plot(allEffects(m39))
+```
+comparar models pas a pas (manera pico y pala)
+[aquí m'he despistat una mica sobre el propòsit del model m39]
+
+interaccions: cal proposar un model ja simplificat 
+cal provar dues parelles d'interaccions: com es fa?
+```{r}
+#Millor model: m50
+m50 <- lm(log(Total_amount)~poly(Trip_distance, 3)+Extra+poly(Tip_amount,2)+Tolls_amount+RateCodeID+Payment_type+period, data=dfD4)
+m51 <- lm(log(Total_amount)~(poly(Trip_distance, 3)+Extra+poly(Tip_amount,2)+Tolls_amount)*period +(RateCodeID+Payment_type)*period, data=dfD4)
+```
+m51: interaccions del periode del dia amb numèriques i factors
+
+(que me he perdido y hay un 52!! el 52 és un model robust sense problemes de sobreparametrització)
+
+(y se fueeeeee mi atención)
+
+no és creïble cap coef de determinació igual a 1!! la estem cagant fent servir alguna variable explicativa que hem modificat o algo
+fare_amount no pot ser explicativa (és un ~*MANDATO DE LA LIDIA*~)
