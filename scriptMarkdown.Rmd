@@ -97,6 +97,7 @@ summary(dfProva$f.passcount)
 #Trip distance és ara tlenkm
 
 #Fare amount és regressió de trip distance???
+
 dfProva$f.MTA <- as.factor(dfProva$MTA_tax)
 summary(dfProva$f.MTA)
 #Podem posar 0.5 
@@ -111,8 +112,8 @@ dfPickups <- dfProva[which(is.na(dfProva$Pickup_longitude)),]
 which(dfProva$Trip_distance == 4.20) #Valor model per buscar coordenades
 dfProva[477,]$Pickup_longitude <- dfProva[300,]$Pickup_longitude #un cop trobat un individu útil, copiem dades
 dfProva[477,]$Pickup_latitude <- dfProva[300,]$Pickup_latitude
-dfProva[2998,]$Dropoff_latitude <- dfProva[609,]$Dropoff_latitude
-dfProva[2998,]$Dropoff_longitude <- dfProva[609,]$Dropoff_longitude
+dfProva[ 4061 ,]$Dropoff_latitude <- dfProva[ 2780 ,]$Dropoff_latitude
+dfProva[ 4061 ,]$Dropoff_longitude <- dfProva[ 2780 ,]$Dropoff_longitude
 
 dfDropoffs <- dfProva[which(is.na(dfProva$Dropoff_longitude)),]
 

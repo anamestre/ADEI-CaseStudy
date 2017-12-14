@@ -56,10 +56,10 @@ man.dist.manual <- function(p1Lat, p1Lon, p2Lat, p2Lon) {
   return(abs(dist_lat) + abs(dist_lon))
 }
 
-dfProva <- dfD4 
+ 
 vectorDistances <- man.dist.manual(dfProva$Pickup_latitude, dfProva$Pickup_longitude, dfProva$Dropoff_latitude, dfProva$Dropoff_longitude)
 
-dfD4$tlenkm <- vectorDistances
+dfProva$tlenkm <- vectorDistances
 
 
 
