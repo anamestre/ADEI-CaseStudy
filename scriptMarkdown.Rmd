@@ -83,6 +83,42 @@ dfD4$Ehail_fee <- NULL
 mice_imputes = mice(dfD4, m=5, maxit = 50)
 ```
 
+Factors
+
+Imputació coordenades: busquem viatges amb la mateixa trip distance o fare amount o total amount (los datos que haya disponibles) i els copiem con _tól morro_
+
+```{r}
+dfProva$f.extra <- as.factor(dfProva$Extra)
+summary(dfProva$f.extra)
+#Podem posar 0.5
+dfProva$f.passcount <- as.factor(dfProva$Passenger_count)
+summary(dfProva$f.passcount)
+#El NA el posem a 1
+#Trip distance és ara tlenkm
+
+#Fare amount és regressió de trip distance???
+dfProva$f.MTA <- as.factor(dfProva$MTA_tax)
+summary(dfProva$f.MTA)
+#Podem posar 0.5 
+dfProva$f.impro <- as.factor(dfProva$improvement_surcharge)
+summary(dfProva$f.impro)
+#0.3 de calle
+#Total amount <- suma de tot el que suma
+
+
+#IMPUTACIO COORDENADES
+dfPickups <- dfProva[which(is.na(dfProva$Pickup_longitude)),]
+which(dfProva$Trip_distance == 4.20) #Valor model per buscar coordenades
+dfProva[477,]$Pickup_longitude <- dfProva[300,]$Pickup_longitude #un cop trobat un individu útil, copiem dades
+dfProva[477,]$Pickup_latitude <- dfProva[300,]$Pickup_latitude
+dfProva[2998,]$Dropoff_latitude <- dfProva[609,]$Dropoff_latitude
+dfProva[2998,]$Dropoff_longitude <- dfProva[609,]$Dropoff_longitude
+
+dfDropoffs <- dfProva[which(is.na(dfProva$Dropoff_longitude)),]
+
+```
+
+
 *Target numeric Total_amount*
 
 ```{r}
