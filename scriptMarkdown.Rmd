@@ -90,17 +90,17 @@ Imputació coordenades: busquem viatges amb la mateixa trip distance o fare amoun
 ```{r}
 dfProva$f.extra <- as.factor(dfProva$Extra)
 summary(dfProva$f.extra)
-#Podem posar 0.5
+#Podem posar 0.5 FET
 dfProva$f.passcount <- as.factor(dfProva$Passenger_count)
 summary(dfProva$f.passcount)
-#El NA el posem a 1
+#El NA el posem a 1 FET
 #Trip distance és ara tlenkm
 
 #Fare amount és regressió de trip distance???
 
 dfProva$f.MTA <- as.factor(dfProva$MTA_tax)
 summary(dfProva$f.MTA)
-#Podem posar 0.5 
+#Podem posar 0.5 FET
 dfProva$f.impro <- as.factor(dfProva$improvement_surcharge)
 summary(dfProva$f.impro)
 #0.3 de calle
@@ -117,6 +117,11 @@ dfProva[ 4061 ,]$Dropoff_longitude <- dfProva[ 2780 ,]$Dropoff_longitude
 
 dfDropoffs <- dfProva[which(is.na(dfProva$Dropoff_longitude)),]
 
+
+
+dfProva[which(dfProva$Trip_distance == 0.8 & is.na(dfProva$Fare_amount)),]$Fare_amount <- 5.6
+
+dfProva[which(is.na(dfProva$Total_amount)),]$Total_amount <- dfProva[which(is.na(dfProva$Total_amount)),]$Fare_amount + dfProva[which(is.na(dfProva$Total_amount)),]$Tip_amount + dfProva[which(is.na(dfProva$Total_amount)),]$Tolls_amount + dfProva[which(is.na(dfProva$Total_amount)),]$Extra + dfProva[which(is.na(dfProva$Total_amount)),]$improvement_surcharge + dfProva[which(is.na(dfProva$Total_amount)),]$MTA_tax
 ```
 
 
