@@ -1,0 +1,140 @@
+---
+title: "Session 1: NY Cabs Data - Total Amount Modeling"
+author: "Lidia Montero"
+date: "November,22nd 2017"
+output: 
+  html_document: 
+    toc: true
+    toc_depth: 3
+    number_sections: true
+---
+
+
+# Introduction
+
+## Data Description
+
+Description http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml
+Data Dictionary - SHL Trip Records -This data dictionary describes SHL trip data in visit http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml:
+
+  - VendorID	A code indicating the LPEP provider that provided the record.      1= Creative Mobile Technologies, LLC; 2= VeriFone Inc.   
+  - lpep_pickup_datetime	The date and time when the meter was engaged.    
+  - lpep_dropoff_datetime	The date and time when the meter was disengaged.     
+  - Passenger_count	The number of passengers in the vehicle. This is a driver-entered value.    -  Trip_distance 	The elapsed trip distance in miles reported by the taximeter.   
+  - Pickup_longitude	 Longitude where the meter was engaged.   
+  - Pickup_latitude	Latitude where the meter was engaged.   
+  - RateCodeID	The final rate code in effect at the end of the trip.  1= Standard rate  2=JFK 3=Newark 4=Nassau or Westchester 5=Negotiated fare 6=Group ride   
+  - Store_and_fwd_flag	This flag indicates whether the trip record was held in vehicle memory before sending to the vendor, aka "store and forward," because the vehicle did not have a connection to the server: Y= store and forward trip  N= not a store and forward trip   
+  - Dropoff_longitude	Longitude where the meter was timed off.   
+  - Dropoff_ latitude	Latitude where the meter was timed off.   
+  - Payment_type	A numeric code signifying how the passenger paid for the trip.  1= Credit card 2= Cash 3= No charge 4= Dispute 5= Unknown 6= Voided trip   
+  - Fare_amount	The time-and-distance fare calculated by the meter.   
+  - Extra	 Miscellaneous extras and surcharges.  Currently, this only includes the $0.50 and $1 rush hour and overnight charges. 
+  - MTA_tax	 $0.50 MTA tax that is automatically triggered dfd on the metered rate in use.    - Improvement_surcharge	$0.30 improvement surcharge assessed on hailed trips at the flag   drop. The improvement surcharge began being levied in 2015.   
+  - Tip_amount	 This field is automatically populated for credit card tips. Cash tips are not included.   
+  - Tolls_amount	Total amount of all tolls paid in trip.    
+  - Total_amount	The total amount charged to passengers. Does not include cash tips.   
+  - Trip_type	A code indicating whether the trip was a street-hail or a dispatch that is automatically assigned dfd on the metered rate in use but can be altered by the driver. 
+1= Street-hail 2= Dispatch  
+
+
+## Load Required Packages
+
+```{r, echo=FALSE, include=FALSE}
+rm(list=ls())
+# Load Required Packages: to be increased over the course
+
+requiredPackages <- c("effects","FactoMineR","car", "factoextra","RColorBrewer","ggplot2")
+missingPackages <- requiredPackages[!(requiredPackages %in% installed.packages()[,"Package"])]
+
+if(length(missingPackages)) install.packages(missingPackages)
+lapply(requiredPackages, require, character.only = TRUE)
+
+```
+# Statistical Modelling
+
+## Load Data after Cleaning and EDA
+
+```{r}
+# green_tripdata_2016-01
+setwd("F:/DOCENCIA/FIB-ADEI/PRACTICA/NYCABS")
+#setwd("D:/Dropbox/DOCENCIA/FIB-ADEI/PRACTICA/NYCABS")
+load("MyTaxi5000Clean.RData")
+summary(df)
+names(df)
+```
+
+## Multiple Linear Regression issues
+
+*Target numeric Total_amount*
+
+```{r}
+names(df)
+vars_con<-names(df)[c(3:15,17:21)];vars_con
+vars_dis<-names(df)[c(1,2,16,22:36)]
+vars_res<-names(df)[c(15,23)]
+
+vars_cexp<-vars_con[c(1:12,14:18)];vars_cexp
+
+round(cor(df[,c("Total_amount",vars_cexp)]),dig=2)
+condes(df,num.var=which(names(df)=="Total_amount"))
+summary(df[,vars_cexp])
+```
+
+```{r}
+
+# Most related: Trip_distance and Fare_amount
+
+m1<-lm(Total_amount~Trip_distance,data=df)
+m2<-lm(Total_amount~Fare_amount,data=df)
+m3<-lm(Total_amount~Trip_distance+Fare_amount,data=df)
+summary(m1)
+summary(m2)
+summary(m3)
+anova(m1,m3)
+cor(df$Fare_amount,df$Trip_distance,use="pairwise.complete.obs")
+#vif(.)  Indica si hi ha colinealitat en el model
+vif(m3)  # m3 no valid  - Choice: m2 Fare_amount
+
+m20<-lm(Total_amount~.,data=df[,vars_con])
+summary(m20)
+vif(m20)
+
+m21<-step(m20) # AIC
+m21<-step(m20,k=log(nrow(df)))  # BIC
+summary(m21)
+vif(m21)
+
+
+
+# Test Fisher: m20 - m21 H0 Equivalents
+anova(m21,m20)
+# All net effects are significant?
+Anova(m21)
+
+vif(m21)  # Check association between explanatory vars
+round(cor(df[,vars_con],use="pairwise.complete.obs"),dig=2)
+
+coefficients(m21)
+m22<-lm(Total_amount~Pickup_longitude+tlenkm+Fare_amount+Extra+MTA_tax+Tip_amount+Tolls_amount,data=df)
+summary(m22)
+Anova(m22)
+
+m23<-lm(Total_amount~tlenkm+Fare_amount+Extra+MTA_tax+Tip_amount+Tolls_amount,data=df)
+summary(m23)
+Anova(m23)
+vif(m23)
+
+m24<-lm(Total_amount~tlenkm+Extra+MTA_tax+Tip_amount+Tolls_amount,data=df)
+summary(m24)
+
+Anova(m24) # All Net effects are significant
+
+# Colinearity?
+vif(m24)  # No
+
+# Conciència? M'he passat?
+anova(m24,m22)
+
+summary(m24)
+```

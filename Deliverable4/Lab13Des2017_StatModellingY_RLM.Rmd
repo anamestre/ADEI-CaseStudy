@@ -1,0 +1,157 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+## Load Required Packages
+
+```{r, echo=FALSE, include=FALSE}
+rm(list=ls())
+# Load Required Packages: to be increased over the course
+
+requiredPackages <- c("effects","FactoMineR","car", "factoextra","RColorBrewer","ggplot2","mvoutlier")
+missingPackages <- requiredPackages[!(requiredPackages %in% installed.packages()[,"Package"])]
+
+if(length(missingPackages)) install.packages(missingPackages)
+lapply(requiredPackages, require, character.only = TRUE)
+
+```
+# Statistical Modelling
+
+## Load Data after Cleaning and EDA
+
+```{r}
+# green_tripdata_2016-01
+load("MyTaxi5000Clean.RData")
+summary(df)
+names(df)
+```
+
+## Multiple Linear Regression issues
+
+*Target numeric Total_amount*
+
+```{r}
+names(df)
+vars_con<-names(df)[c(3:15,17:21)];vars_con
+vars_dis<-names(df)[c(1,2,16,22:36)]
+vars_res<-names(df)[c(15,23)]
+vars_cexp<-vars_con[c(1:12,14:18)];vars_cexp
+
+```
+
+# Using factors as explanatory variables
+
+```{r}
+# I adapt the best model obtained in last class
+m24<-lm(log(Total_amount)~tlenkm+Extra+MTA_tax+Tip_amount+Tolls_amount,data=df)
+summary(m24)
+
+# boxcox: Transform target to improve linear properties
+# Consider polynomial transformations of covariates (numeric explanatory variables)
+
+# Fent els deures ...
+
+m27<-lm(log(Total_amount)~poly(tlenkm,3)+Extra+MTA_tax+poly(Tip_amount,2)+Tolls_amount,data=df)
+
+anova(m24,m27)
+summary(m27)
+Anova(m27)
+vif(m27)
+plot(allEffects(m27))
+```
+
+# Check if any covariate can be substituted by a factor
+
+```{r}
+# Consider to deal with some of the current variables as factors: Extra and MTA_tax
+
+table(df$Extra)
+table(df$MTA_tax)
+df$f.extra<-0
+df$f.extra[df$Extra>0]<-1
+df$f.extra[df$Extra>0.5]<-2
+df$f.extra<-factor(df$f.extra,labels=c("Extra-No","Extra-0.5","Extra-1"))
+df$f.tax<-ifelse(df$MTA_tax>0,1,0)
+df$f.tax<-factor(df$f.tax,labels=c("TAX-No","TAX-Yes"))
+
+m27<-lm(log(Total_amount)~poly(tlenkm,3)+Extra+MTA_tax+poly(Tip_amount,2)+Tolls_amount,data=df)
+
+m28<-lm(log(Total_amount)~poly(tlenkm,3)+f.extra+f.tax+poly(Tip_amount,2)+f.tolls,data=df)
+
+summary(m28)
+# Arguments: R2 and BIC. Fisher Test IS NOT possible!!!
+BIC(m27,m28)
+# Millor: m27 o m28
+```
+
+# NEW Factors in the predictor
+```{r}
+names(df)
+vars_dis<-names(df)[c(1,2,16,22:38)]  # Two last factors considered
+vars_dis  # Totes les discretes
+
+condes(df[,c("Total_amount",vars_dis)],1)  # Choose as candidate vars those more related to target
+
+names(df)
+# For practical reasons in class m27 instead of m28 (The best). I adapt to your file status!!!
+
+m37<-lm(log(Total_amount)~poly(tlenkm,3)+Extra+MTA_tax+poly(Tip_amount,2)+Tolls_amount+RateCodeID+Payment_type+f.hour+f.nbpass+f.scharge+VendorID,data=df)
+summary(m37)
+m38<-lm(log(Total_amount)~poly(tlenkm,3)+Extra+MTA_tax+poly(Tip_amount,2)+Tolls_amount+RateCodeID+Payment_type+period+f.nbpass+f.scharge+VendorID,data=df)
+summary(m38)
+BIC(m37,m38)
+
+summary(m37)
+
+anova(m27,m37)  # Milloro moderadament Fisher Test
+Anova(m37)
+Anova(m38)
+
+m39<-step(m37,k=log(nrow(df)))  # I should use m38 (factor period, no hour)
+m39<-step(m38,k=log(nrow(df)))  # I should use m38 (factor period, no hour)
+
+Anova(m39)
+vif(m39)  # Problems: remove one var
+plot(allEffects(m39))
+```
+
+## Adding interactions to factors and covariates
+```{r}
+# Best model obtained
+m50<-lm(log(Total_amount) ~ poly(tlenkm, 3) +     poly(Tip_amount, 2)+ Extra + Tolls_amount + RateCodeID + Payment_type + period, data = df)
+
+m51<-lm(log(Total_amount) ~ ( poly(tlenkm, 3) +     poly(Tip_amount, 2)+ Extra + Tolls_amount)*period + (RateCodeID + Payment_type )* period, data = df)
+
+m52<-step(m51,k=log(nrow(df)))
+summary(m52)
+
+Anova(m52)
+vif(m52)
+
+plot(allEffects(m52))
+
+### Model Validation 
+par(mfrow=c(2,2))
+plot(m52,id.n=8)
+par(mfrow=c(1,1))
+
+llista<-influencePlot(m52,id.n=10);length(llista);llista
+
+# Remove outliers and influent data
+llrem<-which(row.names(df)%in%row.names(llista));llrem
+df1<-df[-llrem,]
+
+m61<-lm(log(Total_amount) ~ ( poly(tlenkm, 3) +     poly(Tip_amount, 2)+ Extra + Tolls_amount)*period + (RateCodeID + Payment_type )* period, data = df1)
+
+m62<-step(m51,k=log(nrow(df1)))
+summary(m62)
+
+par(mfrow=c(2,2))
+plot(m62,id.n=8)
+par(mfrow=c(1,1))
+
+# Iterate ...
+
+```
+

@@ -39,7 +39,8 @@ dropoff<-as.factor(base$dropoff)
 
 ### Perform a Principal Component Analysis (PCA) #######
 ?PCA 
-res.pca<-PCA(df4, quali.sup=c(1,2,3,17,18,19,20,21,22),quanti.sup= c(4:8,10,13,14,16))
+dfPCA <- dfD4
+res.pca<-PCA(dfPCA, quali.sup=c(1:3, 16:19),quanti.sup= c(4:15,20))
 plot.PCA(res.pca,choix=c("var"),invisible=c("quanti.sup"))
 plot.PCA(res.pca,choix=c("var"),invisible=c("var"))
 plot.PCA(res.pca,choix=c("var"),invisible=c("quanti.sup"))

@@ -138,18 +138,25 @@ condes(dfD4,num.var=which(names(dfD4)=="Total_amount"))
 summary(dfD4[,vars_cexp])
 ```
 
+ANOVA table
+https://stats.stackexchange.com/questions/231059/compare-the-statistical-significance-of-the-difference-between-two-polynomial-re
+	
+The p-value tells you if the models are significantly different (lower p-value means "more different" taking into account the variation, usually p < 0.05 is considered significant). The smaller RSS indicates the better fitting model.
+
+
+
 ```{r}
 
 # Most related: Trip_distance and Fare_amount
 
-m1<-lm(Total_amount~Trip_distance,data=dfD4)
+m1<-lm(Total_amount ~ tlenkm,data=dfD4)
 m2<-lm(Total_amount~Fare_amount,data=dfD4)
-m3<-lm(Total_amount~Trip_distance+Fare_amount,data=dfD4)
+m3<-lm(Total_amount~tlenkm+Fare_amount,data=dfD4)
 summary(m1)
 summary(m2)
 summary(m3)
 anova(m1,m3)
-cor(dfD4$Fare_amount,dfD4$Trip_distance,use="pairwise.complete.obs")
+cor(dfD4$Fare_amount,dfD4$tlenkm,use="pairwise.complete.obs")
 #vif(.)  Indica si hi ha colinealitat en el model
 vif(m3)  # m3 no valid  - Choice: m2 Fare_amount
 
@@ -177,10 +184,15 @@ m22<-lm(Total_amount~Pickup_longitude+tlenkm+Fare_amount+Extra+MTA_tax+Tip_amoun
 summary(m22)
 Anova(m22)
 
-m23<-lm(Total_amount~tlenkm+Fare_amount+Extra+MTA_tax+Tip_amount+Tolls_amount,data=dfD4)
+m23<-lm(Total_amount~tlenkm+Fare_amount+Extra+MTA_tax+Tip_amount+Tolls_amount+improvement_surcharge,data=dfD4)
 summary(m23)
 Anova(m23)
 vif(m23)
+
+m23b<-lm(Total_amount~tlenkm+Extra+MTA_tax+Tip_amount+Tolls_amount+improvement_surcharge,data=dfD4)
+summary(m23b)
+anova(m23b)
+vif(m23b)
 
 m24<-lm(Total_amount~tlenkm+Extra+MTA_tax+Tip_amount+Tolls_amount,data=dfD4)
 summary(m24)
@@ -195,16 +207,6 @@ anova(m24,m22)
 
 summary(m24)
 ```
-
-
-
-
-
-
-
-
-
-
 
 CONDES EXECUTION RESULTS:
 $quanti
