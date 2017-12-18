@@ -69,6 +69,9 @@ el 37 és millor (modestament) en R2 i en test de fisher
 l'hora no és un bon factor (23 params) => podem convertirla en la variable period (peak morning 7-9, off-peak 10-16, peak afternoon 17-20, night 21-6)
 
 ```{r}
+
+
+
 m38 <- lm(log(Total_amount)~poly(Trip_distance, 3)+Extra+MTA_tax+poly(Tip_amount,2)+Tolls_amount+RateCodeID+Payment_type+period+f.scharge+f.nbpass+VendorID, data=dfD4)
 
 BIC(m37, m38)

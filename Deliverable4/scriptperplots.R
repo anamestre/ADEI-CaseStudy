@@ -1,0 +1,183 @@
+---
+  title: "Session 2: NY Cabs Data - Total Amount Modeling"
+author: "Lidia Montero"
+date: "November,29th 2017"
+output: 
+  html_document: 
+  toc: true
+toc_depth: 3
+number_sections: true
+---
+  
+  
+  # Introduction
+  
+  ## Data Description
+  
+  Description http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml
+Data Dictionary - SHL Trip Records -This data dictionary describes SHL trip data in visit http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml:
+  
+  - VendorID	A code indicating the LPEP provider that provided the record.      1= Creative Mobile Technologies, LLC; 2= VeriFone Inc.   
+- lpep_pickup_datetime	The date and time when the meter was engaged.    
+- lpep_dropoff_datetime	The date and time when the meter was disengaged.     
+- Passenger_count	The number of passengers in the vehicle. This is a driver-entered value.    -  Trip_distance 	The elapsed trip distance in miles reported by the taximeter.   
+- Pickup_longitude	 Longitude where the meter was engaged.   
+- Pickup_latitude	Latitude where the meter was engaged.   
+- RateCodeID	The final rate code in effect at the end of the trip.  1= Standard rate  2=JFK 3=Newark 4=Nassau or Westchester 5=Negotiated fare 6=Group ride   
+- Store_and_fwd_flag	This flag indicates whether the trip record was held in vehicle memory before sending to the vendor, aka "store and forward," because the vehicle did not have a connection to the server: Y= store and forward trip  N= not a store and forward trip   
+- Dropoff_longitude	Longitude where the meter was timed off.   
+- Dropoff_ latitude	Latitude where the meter was timed off.   
+- Payment_type	A numeric code signifying how the passenger paid for the trip.  1= Credit card 2= Cash 3= No charge 4= Dispute 5= Unknown 6= Voided trip   
+- Fare_amount	The time-and-distance fare calculated by the meter.   
+- Extra	 Miscellaneous extras and surcharges.  Currently, this only includes the $0.50 and $1 rush hour and overnight charges. 
+- MTA_tax	 $0.50 MTA tax that is automatically triggered dfd on the metered rate in use.    - Improvement_surcharge	$0.30 improvement surcharge assessed on hailed trips at the flag   drop. The improvement surcharge began being levied in 2015.   
+- Tip_amount	 This field is automatically populated for credit card tips. Cash tips are not included.   
+- Tolls_amount	Total amount of all tolls paid in trip.    
+- Total_amount	The total amount charged to passengers. Does not include cash tips.   
+- Trip_type	A code indicating whether the trip was a street-hail or a dispatch that is automatically assigned dfd on the metered rate in use but can be altered by the driver. 
+1= Street-hail 2= Dispatch  
+
+
+## Load Required Packages
+
+```{r, echo=FALSE, include=FALSE}
+rm(list=ls())
+# Load Required Packages: to be increased over the course
+
+requiredPackages <- c("effects","FactoMineR","car", "factoextra","RColorBrewer","ggplot2")
+missingPackages <- requiredPackages[!(requiredPackages %in% installed.packages()[,"Package"])]
+
+if(length(missingPackages)) install.packages(missingPackages)
+lapply(requiredPackages, require, character.only = TRUE)
+
+```
+# Statistical Modelling
+
+## Load Data after Cleaning and EDA
+
+```{r}
+# green_tripdata_2016-01
+setwd("F:/DOCENCIA/FIB-ADEI/PRACTICA/NYCABS/LABS")
+#setwd("D:/Dropbox/DOCENCIA/FIB-ADEI/PRACTICA/NYCABS")
+load("MyTaxi5000Clean.RData")
+summary(df)
+names(df)
+```
+
+## Multiple Linear Regression issues
+
+*Target numeric Total_amount*
+  
+  ```{r}
+names(dfD4)
+vars_con<-names(dfD4)[c(3:15,17:21)];vars_con
+vars_dis<-names(dfD4)[c(1,2,16,22:36)]
+vars_res<-names(dfD4)[c(15,23)]
+
+vars_cexp<-vars_con[c(1:12,14:18)];vars_cexp
+
+```
+
+# Take our best model (up to now!)
+```{r}
+
+m24<-lm(Total_amount~tlenkm+Extra+MTA_tax+Tip_amount+Tolls_amount,data=dfD4)
+summary(m24)
+
+# Transform vars: polinomics - modelling convenient
+m25<-lm(Total_amount~poly(tlenkm,2)+Extra+MTA_tax+Tip_amount+Tolls_amount,data=dfD4)
+summary(m25)
+anova(m24,m25)
+# Net Effects
+library(car)
+Anova(m25)
+
+# Veure efectes marginals
+library(effects)
+plot(allEffects(m25))
+
+# To interpret
+m25iii<-lm(Total_amount~tlenkm+I(tlenkm^2)+Extra+MTA_tax+Tip_amount+Tolls_amount,data=dfD4)
+summary(m25iii)
+
+# Any other transformation
+marginalModelPlots(m26)
+
+par(mfrow=c(2,2))
+plot(m25)
+par(mfrow=c(1,1))
+
+# How to transform the response-target to improve linear properties
+# a) Recipe: log()    - b) boxcox()  library(MASS)
+
+library(MASS)
+boxcox(m25,data=dfD4)
+# log()
+
+m26<-lm(log(Total_amount)~poly(tlenkm,2)+Extra+MTA_tax+Tip_amount+Tolls_amount,data=dfD4)
+summary(m26)
+Anova(m26)
+#### ES POT FER????
+anova(m24,m26) # NO, target is a different 
+
+par(mfrow=c(2,2))
+plot(m26)
+par(mfrow=c(1,1))
+
+library(lmtest)
+bptest(m26)  # Homocesdasticitat  REJECTED
+
+# Boxplot: Outliers severs
+qqq<-summary(rstudent(m26));qqq
+sup<-qqq[5]+3*(qqq[5]-qqq[2]);sup
+
+#qqq<-summary(resid(m26));qqq
+#sup<-qqq[5]+3*(qqq[5]-qqq[2]);sup
+
+boxplot(rstudent(m26))
+abline(h=sup,col="red",lwd=2)
+abline(h=-sup,col="red",lwd=2)
+# Relaxed criteria about severe outliers, taken into account sample size: abs(rstudent(m26))<5
+
+llout<-which(abs(rstudent(m26))>5);length(llout) # Residual outliers
+rstudent(m26)[llout]
+# Explain
+dfD4[llout,vars_con]
+
+# A priori influent data: far from center of gravity of explanatory variables
+
+quantile(hatvalues(m26),seq(0,1,0.1))
+# Cut-off is 2*p/n (small samples) 5*p/n 
+cuthat<-4*length(coef(m26))/nrow(dfD4);cuthat
+Boxplot(hatvalues(m26))
+abline(h=cuthat,col="blue",lwd=2,lty=2)
+# cuthat relaxed to 0.02
+lllev<-which(hatvalues(m26)>0.02);length(lllev)
+
+# Who is who
+dfD4[lllev,vars_con]
+
+# Influent data (a posteriori): Cook's distance
+Boxplot(cooks.distance(m26))
+abline(h=0.05,col="green")
+llcook<-which(cooks.distance(m26)>0.05);length(llcook)
+dfD4[llcook,vars_con]
+
+influenceIndexPlot(m26)
+influencePlot(m26,col="orange",id.n=10)
+
+dfbetas(m26)
+dfbetas(m26)[1:10,]
+
+matplot(dfbetas(m26),type="l")
+nn<-dim(dfD4)[1]
+abline(h=sqrt(4/nn),lty=3,col=6)
+abline(h=-sqrt(4/nn),lty=3,col=6)
+cex=2.0
+legend(locator(n=1),legend=names(as.data.frame(dfbetas(m26))),col=c(1:7,1))
+
+# With Cook's distance 
+lines(sqrt(cooks.distance(m26)),lwd=3,col=1)
+legend(locator(n=1),legend=c(names(as.data.frame(dfbetas(m26))),"Cook D"), col=c(1:8,1))
+
+```
