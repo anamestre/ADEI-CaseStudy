@@ -1,0 +1,165 @@
+---
+title: "BinaryTargetScript"
+author: "Ana Mestre & Gorka Piñol"
+date: "20 de diciembre de 2017"
+output: html_document
+---
+
+```{r, echo=FALSE, include=FALSE}
+# Load Required Packages: to be increased over the course
+
+requiredPackages <- c("effects","FactoMineR","car", "factoextra","RColorBrewer","ggplot2","mvoutlier", "ROCR")
+missingPackages <- requiredPackages[!(requiredPackages %in% installed.packages()[,"Package"])]
+
+if(length(missingPackages)) install.packages(missingPackages)
+lapply(requiredPackages, require, character.only = TRUE)
+```
+
+Cal separar la nostra mostra en mostra de treball i mostra de test
+
+```{r}
+llwork <- sample(1:nrow(dfD4), 4000, replace=FALSE)
+llwork <- sort(llwork); llwork
+dfwork <- dfD4[llwork,]
+dftest <- dfD4[-llwork,]
+```
+
+Afegim l'existència de propines com a factor
+```{r}
+tiplistwork <- factor(ifelse(dfwork$Tip_amount < 0.0001, 0, 1), labels = c("NoTip", "YesTip"))
+dfwork$AnyTip <- tiplistwork
+tiplisttest <- factor(ifelse(dftest$Tip_amount < 0.0001, 0, 1), labels = c("NoTip", "YesTip"))
+dftest$AnyTip <- tiplisttest
+```
+
+No poden ser explicatives: Tip_amount (l'hem feta servir per construir AnyTip) ni Payment_type (problemes perquè només es registren propines pagades amb targeta de crèdit)
+
+# A la caza del modelo
+
+Un cop fet això, podem començar a treballar:
+- Agafem un model amb totes les contínues explicatives (sobreparametritzat i amb problemes però és un bon lloc per començar)
+
+```{r}
+names(dfwork)
+vars_con<-names(dfwork)[c(6:10, 12:18,24)];vars_con
+vars_dis<-names(dfwork)[c(1,4,5,19:22,25:30)];vars_dis
+vars_cexp<-vars_con[c(1:8, 10:13)];vars_cexp
+
+m50 <- glm(AnyTip ~ ., family="binomial", data = dfwork[,c("AnyTip", vars_cexp)])
+summary(m50)
+Anova(m50, test="LR")
+vif(m50)
+```
+
+Problemes: 
+-Anova:
+  -Variables estadísticament significatives: Fare_amount, Extra, Tolls_amount, Total_amount, tlenkm
+-VIF: 
+  -Colinealitat alta entre Fare_amount i Total_amount
+  -Colinealitat alta entre improvement_surcharge i MTA_tax
+  -Possibles colinealitats entre longitudes i latitudes
+  -Altres coses colineals amb Total_amount
+-AIC: 178.88
+  
+```{r}
+m51 <- glm(AnyTip ~ Pickup_longitude + Pickup_latitude + Dropoff_longitude + Dropoff_latitude + Passenger_count + Fare_amount + Extra + MTA_tax + Tolls_amount + tlenkm, family="binomial", data = dfwork)
+summary(m51)
+Anova(m51, test="LR")
+vif(m51)
+```
+
+Problemes: 
+-Anova:
+  -Variables estadísticament significatives ara: Pickup_longitude, Dropoff_longitude, MTA_tax, tlenkm
+-VIF: 
+  -Latitudes potser?
+-AIC: 5052.4
+
+```{r} 
+#No latitudes
+m51b <- glm(AnyTip ~ Pickup_longitude + Dropoff_longitude + Passenger_count + Fare_amount + Extra + MTA_tax + Tolls_amount + tlenkm, family="binomial", data = dfwork)
+summary(m51b)
+Anova(m51b, test="LR")
+vif(m51b)
+```
+
+-AIC: 5072.8
+
+
+I si provem amb step des de m50?
+```{r} 
+#No latitudes
+m51s <- step(m50, k=log(nrow(dfwork)))
+summary(m51s)
+Anova(m51s, test="LR")
+anova(m51s, m50, test="Chisq")
+vif(m51s)
+BIC(m51s, m50)
+marginalModelPlots(m51s)
+```
+Anova -> el model és equivalent 
+però molta colinealitat, caldria treure a m50 total_amount o fare_amount
+marginalModelPlots -> possiblement algun polinomi milloraria (Fare_amount, tlenkm, Total_amount)
+
+```{r}
+m50b <- glm(AnyTip ~ Pickup_longitude + Pickup_latitude + Dropoff_longitude + Dropoff_latitude + Passenger_count + poly(Fare_amount,2) + Extra + MTA_tax + Tolls_amount + poly(tlenkm, 2), family="binomial", data = dfwork)
+
+m51sb <- step(m50b, k=log(nrow(dfwork)))
+Anova(m51sb, test="LR")
+anova(m51sb, m50b, test="Chisq")
+vif(m51sb)
+BIC(m51sb, m50b)
+marginalModelPlots(m51sb)
+summary(m51sb)
+```
+
+Com a goodness of fit: relació entre deviance residual i graus de llibertat
+En aquest cas no sembla gaire bo... (5024.7 on 3993 degrees)
+Què podem fer?
+  -MTA com a factor
+  -tlenkm a més graus
+  -afegir factors, segons com
+  
+# HERE BE FACTORS
+
+# Diagnòstics finals
+
+```{r} 
+#Boxplot dels residus
+boxplot(rstudent(m51sb), id.n=15)
+
+
+#Observacions potencialment influents: hat values
+
+#Influent data: distància de Cook i diagrama de bombolles
+```
+
+Els boxplots com a factors no són simètrics (no és culpa del model)
+El diagrama de bombolles funciona igual a factors que a numèriques (obs. potencialment influents)
+  Problema: residus grans, superiors a 2 + residus grans amb hat value elevat
+  
+Cal suprimir les observacions influents (però cal saber per què ho són! analitzar per què)
+Com funciona el model? fem servir la llibreria effects pels plots allEffects
+  "La probabilitat de propina és proporcional a la longitud de la carrera" => pot ser una corva però no passa res! s'interpreta igual
+  L'eix de AnyTip significa "probabilitat de resposta positiva"
+  
+Taules de confusió
+
+```{r}
+fit.AnyTip <- 0 #predict...
+  #type = "response" serveix per adaptar el resultat a l'escala de la resposta (0-1), i no del predictor lineal (tot |R)
+  #columnes: realitat // files: predicció del model
+
+#capacitat predictiva: com més alta millor
+  
+#model naïve: "totes les prediccions les faré de la categoria del que faci la majoria"
+#la taula de confusió només té una fila, podem mirar quant augmenta la capacitat predictiva a veure (però ens podem frustrar! a classe només és un 5%)
+  
+# CORVA ROC: capacitat de discriminació que té el model
+#podem rebaixar el cutoff però cuidao! com més el rebaixem (o augmentem) podem augmentar els falsos positius/negatius 
+# recordem: com més a prop de la diagonal, pitjor 
+# segurament no ens surti un bon model, cero dramas, siempre smile
+  
+```
+
+l'anàlisi de la capacitat predictiva s'ha de fer amb la mostra test!!! REMEMBER IMPORTANT

@@ -151,7 +151,34 @@ par(mfrow=c(2,2))
 plot(m62,id.n=8)
 par(mfrow=c(1,1))
 
+plot(allEffects(m62))
+marginalModelPlots(m62)
+
 # Iterate ...
+
+
+
+if(dfProva$Tip_amount > 0) { dfProva$AnyTip <- as.factor("TIP-YES") }
+else { dfProva$AnyTip <- as.factor("TIP-NO") }
+
+assignTipFactor <- function(tip) {
+  tipN <- as.numeric(tip)
+  result <- "None"
+  if (tipN > 0) { result <- "TIP-YES"}
+  else {result <- "TIP-NO"}
+  return(result)
+}
+
+for (i in 1:5000) {
+  dfProva[i,]$AnyTip <- assignTipFactor(dfProva[i,]$Tip_amount) 
+}
+
+dfProva$AnyTip <- tiplist
+
+
+tiplist <- factor(ifelse(dfProva$Tip_amount < 0.0001, 0, 1), labels = c("NoTip", "YesTip"))
+
+
 
 ```
 
